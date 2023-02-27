@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">SmartPowerConnector_Room</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="add_device_screen">Add a Device</string>
+    <string name="back_button">Back</string>
+    <string name="save">Save</string>
+    <string name="device_name">Device Name</string>
+    <string name="device_id">Device Id</string>
+    <string name="device_description">Device Description</string>
+    <string name="edit_device">Edit Device</string>
+    <string name="device">Device</string>
+    <string name="no_device">No devices</string>
+    <string name="add_device">Add device</string>
+    <string name="device_details">Device Details</string>
+    <string name="attention">ATTENTION</string>
+    <string name="sure">Are you sure you wish to remove this device?</string>
+    <string name="yes">Yes, I wish to remove this device</string>
+    <string name="no">No, I do not wish to remove this device</string>
+    <string name="delete">Delete</string>
+</resources>
