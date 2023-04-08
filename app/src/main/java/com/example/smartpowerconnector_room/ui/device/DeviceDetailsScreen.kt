@@ -11,29 +11,39 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.R
 import com.example.smartpowerconnector_room.SPCAppTopAppBar
+import com.example.smartpowerconnector_room.data.Device
+import com.example.smartpowerconnector_room.internet.idata.AwsRepository
+import com.example.smartpowerconnector_room.internet.idata.AwsUiState
+import com.example.smartpowerconnector_room.internet.idata.DeviceData
+import com.example.smartpowerconnector_room.internet.idata.NetworkHomeViewModel
 import com.example.smartpowerconnector_room.ui.AppViewModelProvider
 import com.example.smartpowerconnector_room.ui.navigation.NavigationDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 // Need to add timer and routine option to this screen.
 
 object DeviceDetailsDestination : NavigationDestination{
     override val route = "device_details"
     override val titleRes: Int = R.string.device_details
-    const val deviceIDArg = "deviceId"
+    const val deviceIDArg = "deviceID"
     val routeWithArgs = "$route/{$deviceIDArg}"
 }
 
 @Composable
 fun DeviceDetailScreen(
     navigateToEditDevice: (Int)-> Unit,
-    navigateBack: ()->Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: DeviceDetailsViewModel = viewModel(factory= AppViewModelProvider.Factory)
+    viewModel: DeviceDetailsViewModel = viewModel(factory= AppViewModelProvider.Factory),
+    viewModel2: NetworkHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val uiState = viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -47,18 +57,24 @@ fun DeviceDetailScreen(
             },
         floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {navigateToEditDevice(uiState.value.deviceDetails.id)},
+                    onClick = { navigateToEditDevice(uiState.value.deviceDetails.id) },
                     modifier = Modifier.navigationBarsPadding()
                     ) {
                     Icon(imageVector = Icons.Default.Edit,
                         contentDescription = stringResource(R.string.edit_device),
                         tint = MaterialTheme.colors.onPrimary
-                        )
+                    )
                 }
             }
     ){ innerPadding ->
         DeviceDetailBody(
             deviceDetailsUiState = uiState.value,
+            onChangeStatus = {
+                coroutineScope.launch {
+                    viewModel.changeStatus()
+                    //navigateBack()
+                }
+            },
             onDelete = {
                 coroutineScope.launch{
                     viewModel.deleteDevice()
@@ -70,9 +86,11 @@ fun DeviceDetailScreen(
     }
 }
 
+
 @Composable
 private fun DeviceDetailBody(
     deviceDetailsUiState: DeviceDetailsUiState,
+    onChangeStatus: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -85,6 +103,12 @@ private fun DeviceDetailBody(
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         DeviceInputForm(deviceDetails = deviceDetailsUiState.deviceDetails, enabled = false)
         OutlinedButton(
+            onClick = {onChangeStatus()},
+            modifier = Modifier
+        ){
+            Text(text = "Change Status")
+        }
+        OutlinedButton(
             onClick = {deleteConfirmationRequired = true},
             modifier= Modifier.fillMaxWidth()
         ){
@@ -96,8 +120,13 @@ private fun DeviceDetailBody(
                                     onDelete()},
                 onDeleteCancel = { deleteConfirmationRequired = false })
         }
+        Divider()
+
+
     }
 }
+
+
 
 @Composable
 private fun DeleteConfirmationDialog(
@@ -122,3 +151,32 @@ private fun DeleteConfirmationDialog(
         }
     )
 }
+
+/*
+sealed interface NetworkUiState{
+    object Error: NetworkUiState
+    object Loading: NetworkUiState
+    object Success: NetworkUiState
+}
+
+class networkDeviceViewModel(
+    awsRepository: AwsRepository,
+): ViewModel(){
+    var networkUiState: NetworkUiState by mutableStateOf(NetworkUiState.Loading)
+        private set
+
+    fun onOffSwitch(deviceData: DeviceData) {
+        viewModelScope.launch {
+            networkUiState = networkUiState.Loading
+            networkUiState = try {
+                awsRepository.onOffSwitch(deviceData)
+                NetworkUiState.Success(awsRepository.onOffSwitch()) // refresh the device list after updating
+            } catch (e: IOException) {
+                AwsUiState.Error
+            } catch (e: HttpException) {
+                AwsUiState.Error
+            }
+        }
+    }
+}
+*/

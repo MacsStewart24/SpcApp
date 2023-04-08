@@ -1,7 +1,6 @@
 package com.example.smartpowerconnector_room.ui.device
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
@@ -10,15 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartpowerconnector_room.SPCAppTopAppBar
 import com.example.smartpowerconnector_room.ui.AppViewModelProvider
 import com.example.smartpowerconnector_room.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 object AddDeviceDestination : NavigationDestination{
@@ -98,6 +95,14 @@ fun DeviceInputForm(
             value = deviceDetails.deviceId,
             onValueChange = { onValueChange(deviceDetails.copy(deviceId = it)) },
             label = { Text(stringResource(R.string.device_id)) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = deviceDetails.deviceStatus,
+            onValueChange = { onValueChange(deviceDetails.copy(deviceStatus = deviceDetails.deviceStatus)) },
+            label = { Text(stringResource(R.string.device_status)) },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
