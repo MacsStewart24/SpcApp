@@ -7,11 +7,17 @@
     <string name="device_name">Device Name</string>
     <string name="device_id">Device Id</string>
     <string name="device_description">Device Description</string>
+    <string name="device_status">Device Status</string>
     <string name="edit_device">Edit Device</string>
     <string name="device">Device</string>
     <string name="no_device">No devices</string>
+    <string name="loading_failed">Failed to load</string>
+    <string name="retry">Retry</string>
+    <string name="loading">Loading</string>
+    <string name="network_message">Network Devices</string>
     <string name="add_device">Add device</string>
     <string name="device_details">Device Details</string>
+    <string name="statusChange">Change Status</string>
     <string name="attention">ATTENTION</string>
     <string name="sure">Are you sure you wish to remove this device?</string>
     <string name="yes">Yes, I wish to remove this device</string>

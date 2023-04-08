@@ -3,7 +3,7 @@ package com.example.smartpowerconnector_room.data
 import kotlinx.coroutines.flow.Flow
 
 interface DeviceRepository {
-    //Retrieves all data form the given data source
+    //Retrieves all data from the given data source
     fun getAllDevicesStream(): Flow<List<Device>>
 
     //Retrieve a single device from the given source
@@ -15,3 +15,4 @@ interface DeviceRepository {
 
     suspend fun updateDevice(device: Device)            // Update Item
 }
+

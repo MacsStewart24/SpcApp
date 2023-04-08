@@ -16,10 +16,10 @@ import kotlinx.coroutines.launch
 
 
 object DeviceEditDestination : NavigationDestination{
-    override val route = "edit_device"
+    override val route = "device_edit"
     override val titleRes= R.string.edit_device
     const val deviceIDArg = "deviceID"
-    val routeWithArgs = "${DeviceEditDestination.route}/{${deviceIDArg}"
+    val routeWithArgs = "$route/{$deviceIDArg}"
 }
 
 

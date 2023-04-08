@@ -1,17 +1,11 @@
-package com.example.smartpowerconnector_room.ui.home
+package com.example.smartpowerconnector_room.ui.navigation.home
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.smartpowerconnector_room.data.Device
 import com.example.smartpowerconnector_room.data.DeviceRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
+
 
 class HomeViewModel(deviceRepository: DeviceRepository): ViewModel() {
 
@@ -29,3 +23,8 @@ class HomeViewModel(deviceRepository: DeviceRepository): ViewModel() {
 }
 
 data class HomeUiState(val deviceList: List<Device> = listOf())
+
+
+
+
+
