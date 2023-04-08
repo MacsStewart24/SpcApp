@@ -31,7 +31,7 @@ data class DeviceDetails(
     val id: Int = 0,
     val deviceName: String = " ",
     val deviceId: String= " ",
-    val deviceStatus: String = "",
+    val deviceStatus: String = "Off",
     val deviceDescription: String= " ",
 )
 

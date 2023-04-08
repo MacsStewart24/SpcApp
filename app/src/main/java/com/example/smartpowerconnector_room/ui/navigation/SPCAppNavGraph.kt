@@ -8,28 +8,30 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.smartpowerconnector_room.ui.device.*
-import com.example.smartpowerconnector_room.ui.home.HomeScreen
+import com.example.smartpowerconnector_room.ui.navigation.home.HomeScreen
 
 @Composable
 fun SPCNavHost(
     navController: NavHostController,
     modifier: Modifier= Modifier
 ){
-
-    NavHost(navController = navController,
+    NavHost(
+            navController = navController,
             startDestination= HomeScreen.route,
             modifier= modifier
     ){
         composable(route = HomeScreen.route){
             HomeScreen(
-                navigateToDeviceEntry = {navController.navigate(DeviceEditDestination.route)},
-                navigateToDeviceUpdate = {navController.navigate("${AddDeviceDestination.route}/${it}")}
+                navigateToDeviceEntry = {navController.navigate(AddDeviceDestination.route)},
+                navigateToDeviceUpdate = {
+                    navController.navigate("${DeviceDetailsDestination.route}/${it}")
+                }
             )
         }
         composable(route = AddDeviceDestination.route){
             AddDeviceScreen(
-                navigateBack = {navController.popBackStack()},
-                onNavigateUp = {navController.navigateUp()}
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
             )
         }
         composable(
@@ -39,8 +41,8 @@ fun SPCNavHost(
             })
         ){
             DeviceDetailScreen(
-                navigateToEditDevice= {navController.navigate("${DeviceEditDestination.route}/$it")},
-                navigateBack = {navController.navigateUp()}
+                navigateToEditDevice= { navController.navigate("${DeviceEditDestination.route}/$it") },
+                navigateBack = { navController.navigateUp() }
             )
         }
         composable(
