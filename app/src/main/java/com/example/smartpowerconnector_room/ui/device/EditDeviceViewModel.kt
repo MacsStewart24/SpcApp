@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartpowerconnector_room.data.DeviceRepository
+import com.example.smartpowerconnector_room.internet.idata.AwsRepository
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class EditDeviceViewModel(
     savedStateHandle: SavedStateHandle,
-    private val deviceRepository: DeviceRepository
+    private val deviceRepository: DeviceRepository,
+    private val awsRepository: AwsRepository
 ) : ViewModel() {
 
     var deviceUiState by mutableStateOf( DeviceUiState() )
@@ -33,6 +35,7 @@ class EditDeviceViewModel(
     suspend fun updateDevice() {
         if (validateInput(deviceUiState.DeviceDetails)) {
             deviceRepository.updateDevice(deviceUiState.DeviceDetails.toDevice())
+            awsRepository.updateDevice(deviceUiState.DeviceDetails.toDeviceData())
         }
     }
 
@@ -40,26 +43,9 @@ class EditDeviceViewModel(
         deviceUiState = DeviceUiState(DeviceDetails = deviceDetails, validEntry = validateInput(deviceDetails))
     }
 
-
-
     private fun validateInput(uiState: DeviceDetails = deviceUiState.DeviceDetails): Boolean{
         return with (uiState){
             deviceName.isNotBlank() && deviceId.isNotBlank()
         }
     }
 }
-
-//might need to add function Reduce by one
-/*suspend fun changeStatus(){
-    viewModelScope.launch {
-        val currentDevice = uiState.value.deviceDetails.toDevice()
-        if(currentDevice.deviceStatus == "Off"){
-            deviceRepository.updateDevice(currentDevice.copy(deviceStatus = "On"))
-        }
-        else{
-            deviceRepository.updateDevice(currentDevice.copy(deviceStatus = "Off"))
-        }
-        //POST will be implemented Here
-    }
-}
-*/

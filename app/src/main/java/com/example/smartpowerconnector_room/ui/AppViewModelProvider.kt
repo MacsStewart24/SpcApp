@@ -6,13 +6,21 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.smartpowerconnector_room.DeviceApplication
-import com.example.smartpowerconnector_room.internet.idata.DeviceData
+import com.example.smartpowerconnector_room.alarm.AlarmInterface
 import com.example.smartpowerconnector_room.internet.idata.NetworkHomeViewModel
 import com.example.smartpowerconnector_room.ui.device.AddDeviceViewModel
-import com.example.smartpowerconnector_room.ui.device.DeviceDetailScreen
 import com.example.smartpowerconnector_room.ui.device.DeviceDetailsViewModel
 import com.example.smartpowerconnector_room.ui.device.EditDeviceViewModel
-import com.example.smartpowerconnector_room.ui.navigation.home.HomeViewModel
+import com.example.smartpowerconnector_room.home.HomeViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.clock.ClockRoutineEditViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.clock.ClockRoutineEntryViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.mixed.MixRoutineEditViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.mixed.MixRoutineEntryViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.multi.MultiRoutineEditViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.multi.MultiRoutineEntryViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.routine.TimerRoutineDetailsViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.routine.TimerRoutineEditViewModel
+import com.example.smartpowerconnector_room.ui.routinescreens.routine.TimerRoutineEntryViewModel
 
 
 object AppViewModelProvider {
@@ -21,7 +29,8 @@ object AppViewModelProvider {
         initializer {
             EditDeviceViewModel(
                 this.createSavedStateHandle(),
-                DeviceApplication().container.deviceRepository
+                DeviceApplication().container.deviceRepository,
+                DeviceApplication().container.awsRepository
             )
         }
 
@@ -34,10 +43,13 @@ object AppViewModelProvider {
             DeviceDetailsViewModel(
                 this.createSavedStateHandle(),
                 DeviceApplication().container.deviceRepository,
-                DeviceApplication().container.awsRepository
+                DeviceApplication().container.awsRepository,
+                DeviceApplication().container.routinesRepository,
+                DeviceApplication().container.clockRoutineRepository,
+                DeviceApplication().container.multiRoutineRepository,
+                DeviceApplication().container.mixRoutineRepository
             )
         }
-
         initializer {
             HomeViewModel(
                 DeviceApplication().container.deviceRepository
@@ -48,6 +60,84 @@ object AppViewModelProvider {
                 DeviceApplication().container.awsRepository
             )
         }
+        //////////////////////////Timer Routine/////////////////////////////////
+
+        // Initializer for TimerRoutineEntryViewModel
+        initializer {
+            TimerRoutineEntryViewModel(
+                DeviceApplication().container.routinesRepository,
+                DeviceApplication().container.deviceRepository,
+                DeviceApplication().container.awsRepository,
+                DeviceApplication().container.alarmInterface
+                )
+        }
+
+        initializer {
+            TimerRoutineEditViewModel(
+                this.createSavedStateHandle(),
+                DeviceApplication().container.routinesRepository
+            )
+        }
+        initializer {
+            TimerRoutineDetailsViewModel(
+                this.createSavedStateHandle(),
+                DeviceApplication().container.routinesRepository
+            )
+        }
+
+        ///////////////////////////////////Clock Routine///////////////////////////
+        initializer {
+            ClockRoutineEntryViewModel(
+                DeviceApplication().container.clockRoutineRepository,
+                DeviceApplication().container.deviceRepository
+            )
+        }
+        initializer {
+            ClockRoutineEditViewModel(
+                this.createSavedStateHandle(),
+                DeviceApplication().container.clockRoutineRepository
+            )
+
+        }
+
+//        initializer {
+//            ClockRoutineDetailsViewModel(
+//                this.createSavedStateHandle(),
+//                inventoryApplication().container.clockRoutineRepository
+//            )
+//        }
+
+        //////////////////////////Multi Routine/////////////////////////
+        initializer {
+            MultiRoutineEntryViewModel(
+                DeviceApplication().container.multiRoutineRepository,
+                DeviceApplication().container.deviceRepository
+            )
+        }
+        initializer {
+            MultiRoutineEditViewModel(
+                this.createSavedStateHandle(),
+                DeviceApplication().container.multiRoutineRepository
+            )
+        }
+//        initializer {
+//            MultiRoutineDetailsViewModel(
+//                this.createSavedStateHandle(),
+//                inventoryApplication().container.multiRoutineRepository
+//            )
+//        }
+
+        /////////////////////////Mix Routine//////////////////////////////
+        initializer {
+            MixRoutineEntryViewModel(DeviceApplication().container.mixRoutineRepository, DeviceApplication().container.deviceRepository)
+        }
+        initializer {
+            MixRoutineEditViewModel(
+                this.createSavedStateHandle(),
+                DeviceApplication().container.mixRoutineRepository
+            )
+        }
+
     }
 }
 

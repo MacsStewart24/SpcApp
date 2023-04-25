@@ -7,31 +7,29 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.*
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 
 
-
-
-//const val BASE_URL = "https://tlyr3e3uvd.execute-api.us-east-2.amazonaws.com/"
-const val BASE_URL = "https://aaeh7rnpl1.execute-api.us-east-1.amazonaws.com/"
-@OptIn(ExperimentalSerializationApi::class)
-val retrofit = Retrofit.Builder()
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-    .baseUrl(BASE_URL)
-    .build()
-
-object AwsApi{
-    val retrofitService: AwsApiService by lazy{
-        retrofit.create(AwsApiService::class.java)
-    }
-}
 interface AwsApiService{
     @GET("items")
     suspend fun getAllDevices(): List<DeviceData>
 
-    @PUT("items")
-    suspend fun onOffSwitch(/*@Path("{items}") items:,*/ @Body deviceData: DeviceData): Call<DeviceData>
+    @PUT("items/{id}")
+    suspend fun onOffSwitch(@Path("id") id: String, @Body deviceData: DeviceData): Response<DeviceData>
+
+    @DELETE("items/{id}")
+    suspend fun deleteDevice(@Path("id") id: String): Response<DeviceData>
+
+    @PUT("items/{id}")
+    fun updateDevice(@Path("id") id: String, @Body deviceData: DeviceData): Response<DeviceData>
+
+    //@PATCH("items/{id}")
+    //fun patchDevice(@Path("id") id: String, @ParameterName() deviceData: DeviceData): Response<DeviceData>
 }
 

@@ -18,9 +18,6 @@ interface DeviceDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(device: Device)              // Note: Suspend allows for the insert function to run on a background thread.
 
-    //@Insert(onConflict = OnConflictStrategy.REPLACE)
-    //suspend fun insertAllDevices(device: List<Device>)
-
     @Update
     suspend fun update(device: Device)
 
@@ -32,4 +29,10 @@ interface DeviceDao {
 
     @Query("SELECT * from devices WHERE id = :id ")         //Fixme: Add search options for the names of the devices
     fun getItem(id: Int): Flow<Device>
+
+    @Query("SELECT * from devices WHERE deviceName = :id ")         //Fixme: Add search options for the names of the devices
+    fun getDevice(id: String): Flow<Device?>
+
+    @Query("SELECT * from devices WHERE id = :id ")         //Fixme: Add search options for the names of the devices
+    fun getItems(id: String): Device
 }

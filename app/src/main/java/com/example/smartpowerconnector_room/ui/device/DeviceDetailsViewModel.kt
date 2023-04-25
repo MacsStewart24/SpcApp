@@ -1,41 +1,38 @@
 package com.example.smartpowerconnector_room.ui.device
 
-import android.util.Log
-import androidx.compose.material.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
+
 import androidx.lifecycle.*
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartpowerconnector_room.data.DeviceRepository
+import com.example.smartpowerconnector_room.data.allRoutine.clock.ClockRoutine
+import com.example.smartpowerconnector_room.data.allRoutine.clock.ClockRoutineRepository
+import com.example.smartpowerconnector_room.data.allRoutine.mixed.MixRoutine
+import com.example.smartpowerconnector_room.data.allRoutine.mixed.MixRoutineRepository
+import com.example.smartpowerconnector_room.data.allRoutine.multi.MultiRoutine
+import com.example.smartpowerconnector_room.data.allRoutine.multi.MultiRoutineRepository
+import com.example.smartpowerconnector_room.data.allRoutine.routine.RoutinesRepository
+import com.example.smartpowerconnector_room.data.allRoutine.routine.TimerRoutine
 import com.example.smartpowerconnector_room.internet.idata.*
-import com.example.smartpowerconnector_room.ui.AppViewModelProvider
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import retrofit2.*
-import java.io.IOException
 
 class DeviceDetailsViewModel (
     savedStateHandle: SavedStateHandle,
     private val deviceRepository: DeviceRepository,
-    private val awsRepository: AwsRepository
-): ViewModel() {
+    private val awsRepository: AwsRepository,
+    private val routinesRepository: RoutinesRepository,
+    private val clockRoutineRepository: ClockRoutineRepository,
+    private val multiRoutineRepository: MultiRoutineRepository,
+    private val mixRoutineRepository: MixRoutineRepository
+    ): ViewModel() {
 
     private val deviceID: Int = checkNotNull(savedStateHandle[DeviceDetailsDestination.deviceIDArg])
     val uiState: StateFlow<DeviceDetailsUiState> =
         deviceRepository.getDeviceStream(deviceID)
             .filterNotNull()
-            .map{
-               DeviceDetailsUiState(statusChange = it.deviceStatus == "Off", deviceDetails = it.toDeviceDetails() )// Reverted change noKnownDevices= it.deviceName == null,
+            .map {
+                DeviceDetailsUiState(
+                    statusChange = it.deviceStatus == "Off",
+                    deviceDetails = it.toDeviceDetails()
+                )// Reverted change noKnownDevices= it.deviceName == null,
 
             }.stateIn(
                 scope = viewModelScope,
@@ -43,17 +40,54 @@ class DeviceDetailsViewModel (
                 initialValue = DeviceDetailsUiState()
             )
 
+    val itemUiState2: StateFlow<ItemUiState2> =
+        routinesRepository.getAllTimerRoutinesStream().map { ItemUiState2(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(DeviceDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState2()
+            )
+
+    val itemUiState3: StateFlow<ItemUiState3> =
+        clockRoutineRepository.getAllClockRoutinesStream().map { ItemUiState3(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(DeviceDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState3()
+            )
+
+    val itemUiState4: StateFlow<ItemUiState4> =
+        multiRoutineRepository.getAllMultiRoutinesStream().map { ItemUiState4(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(DeviceDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState4()
+            )
+
+    val itemUiState5: StateFlow<ItemUiState5> =
+        mixRoutineRepository.getAllMixRoutinesStream().map { ItemUiState5(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(DeviceDetailsViewModel.TIMEOUT_MILLIS),
+                initialValue = ItemUiState5()
+            )
+
     suspend fun changeStatus() {
-        val currentDevice = uiState.value.deviceDetails.toDevice()
+        val device = uiState.value.deviceDetails.toDevice()
+        val currentDevice = uiState.value.deviceDetails.toDeviceData()
         val updatedDevice = currentDevice.copy(
             deviceStatus = if (currentDevice.deviceStatus == "Off") "On" else "Off"
         )
-        deviceRepository.updateDevice(updatedDevice)
-        val updatedNetworkDevice = uiState.value.deviceDetails.toDeviceData()
-        awsRepository.onOffSwitch(updatedNetworkDevice)
+        awsRepository.onOffSwitch(updatedDevice)
+        val repoDevice = device.copy(
+            deviceStatus = if (currentDevice.deviceStatus == "Off") "On" else "Off"
+        )
+        deviceRepository.updateDevice(repoDevice)
     }
+
         suspend fun deleteDevice(){
             deviceRepository.deleteDevice(uiState.value.deviceDetails.toDevice())
+            awsRepository.deleteDevice(uiState.value.deviceDetails.toDeviceData())
         }
 
         companion object{
@@ -62,7 +96,6 @@ class DeviceDetailsViewModel (
     }
 
 data class DeviceDetailsUiState(
-    //val noKnownDevices: Boolean = true,
     val statusChange: Boolean = true,
     val deviceDetails: DeviceDetails = DeviceDetails()
 )
@@ -72,54 +105,15 @@ fun DeviceDetails.toDeviceData(): DeviceData {
         deviceName = this.deviceName,
         deviceId= this.deviceId,
         deviceDescription =  this.deviceDescription,
-        deviceStatus = this.deviceStatus
+        deviceStatus = this.deviceStatus,
+        deviceTime = this.deviceTime
     )
 }
-//This code updates the server but crashes
-/* suspend fun changeStatus() {
-     val currentDevice = uiState.value.deviceDetails.toDevice()
-     val updatedDevice = currentDevice.copy(
-         deviceStatus = if (currentDevice.deviceStatus == "Off") "On" else "Off"
-     )
-     deviceRepository.updateDevice(updatedDevice)
-     val updatedNetworkDevice = uiState.value.deviceDetails.toDeviceData()
-     onOffSwitch(updatedNetworkDevice)
- }*/
-//This code chagnes the device status locally and doesn't crash. But doesn't update the server,
-/*suspend fun changeStatus() {
-        val currentDevice = uiState.value.deviceDetails.toDevice()
-        val updatedDevice = currentDevice.copy(
-            deviceStatus = if (currentDevice.deviceStatus == "Off") "On" else "Off"
-        )
-        deviceRepository.updateDevice(updatedDevice)
-        val updatedNetworkDevice = uiState.value.deviceDetails.toDeviceData()
-        onOffSwitch(updatedNetworkDevice)
 
-        // Create a new DeviceDetailsUiState with the updated device status
-        val updatedUiState = uiState.value.copy(
-            statusChange = updatedDevice.deviceStatus == "Off",
-            deviceDetails = updatedDevice.toDeviceDetails()
-        )
+data class ItemUiState2(val timerRoutineList: List<TimerRoutine> = listOf())
 
-        // Pass the updated UiState to stateIn
-        uiState.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-            initialValue = updatedUiState
-        )
-    }
+data class ItemUiState3(val clockRoutineList: List<ClockRoutine> = listOf())
 
+data class ItemUiState4(val multiRoutineList: List<MultiRoutine> = listOf())
 
-    fun onOffSwitch(deviceData: DeviceData) {
-        viewModelScope.launch {
-        awsUiState = AwsUiState.Loading
-        awsUiState = try {
-            awsRepository.onOffSwitch(deviceData)
-            AwsUiState.Success(awsRepository.getAllDevices()) // refresh the device list after updating
-        } catch (e: IOException) {
-            AwsUiState.Error
-        } catch (e: HttpException) {
-            AwsUiState.Error
-        }
-    }
-}*/
+data class ItemUiState5(val mixRoutineList: List<MixRoutine> = listOf())

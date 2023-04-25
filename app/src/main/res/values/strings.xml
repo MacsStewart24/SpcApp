@@ -23,4 +23,75 @@
     <string name="yes">Yes, I wish to remove this device</string>
     <string name="no">No, I do not wish to remove this device</string>
     <string name="delete">Delete</string>
+
+
+    <string name="routine_title">Switch after a time</string>
+    <string name="add_timer_routine">Set a timer to turn device on/off</string>
+    <string name="edit_timer_routine_title">Edit Routine</string>
+    <string name="timer_routine_name_req">Routine Name*</string>
+    <string name="timer_routine_time_req">Period of time to set Set*</string>
+    <string name="status_req">Device Status*</string>
+    <string name="timer_routine_entry_title">Add routine after a period of time</string>
+    <string name="timer_routine_details_title">View Timer Routine</string>
+    <string name="edit_clock_routine_title">Edit Routine</string>
+    <string name="clock_routine_details_title">View Clock Routine</string>
+    <string name="clock_routine_entry_title">Add Clock Routine</string>
+    <string name="add_clock_routine">Set a time to turn on/off</string>
+    <string name="clock_routine_name_req">Routine Name *</string>
+    <string name="clock_routine_time_req">Time to turn device on/off*</string>
+    <string name="edit_multi_routine_title">Edit Routine</string>
+    <string name="multi_routine_details_title">View Multi Routine</string>
+    <string name="multi_routine_entry_title">Add Multi Routine</string>
+    <string name="add_multi_routine">Set a condition to turn on/off</string>
+    <string name="multi_routine_name_req">Routine Name *</string>
+    <string name="multi_routine_time_req">Condition to Set*</string>
+    <string name="edit_mix_routine_title">Edit Routine</string>
+    <string name="mix_routine_details_title">View Mix Routine</string>
+    <string name="mix_routine_entry_title">Add Mix Routine</string>
+    <string name="add_mix_routine">Set a mixed routine</string>
+    <string name="mix_routine_condition_req">Condition to Set*</string>
+    <string name="mix_routine_name_req">Routine Name *</string>
+    <string name="mix_routine_time_req">Time to Set*</string>
+    <string name="multi_device_name_req">Device Name *</string>
+    <string name="save_action">Save</string>
+    <string name="delete_question">Are you sure you want to delete?</string>
+    <string name="add_a_routine">Add a Routine</string>
+    <string name="routine">Routine Name</string>
+    <string name="changing_status">Changing the Device status</string>
+    <string name="device_time">Time</string>
+
+    <string name="running_routine">Running Routine</string>
+
+    <!-- Titles -->
+    <string name="blur_title">Select Blur Amount</string>
+
+    <!-- Buttons -->
+    <string name="select_image">Select Image</string>
+    <string name="go">Go</string>
+    <string name="see_file">See File</string>
+
+    <!-- Content descriptions -->
+    <string name="description_image">The image to blur and save.</string>
+
+    <!-- Blur levels -->
+    <string name="blur_lv_1">A little blurred</string>
+    <string name="blur_lv_2">More blurred</string>
+    <string name="blur_lv_3">The most blurred</string>
+    <string name="cancel_work">Cancel Work</string>
+
+    <!-- Messages -->
+    <string name="set_permissions_in_settings">Go to Settings -> Apps and Notifications ->
+        WorkManager Demo -> App Permissions and grant access to Storage.</string>
+
+    <!-- Notification -->
+    <string name="blurring_image">Blurring image</string>
+    <string name="saving_image">Saving image</string>
+    <string name="cleaning_up_files">Cleaning up old temporary files</string>
+
+    <!-- Errors -->
+    <string name="invalid_input_uri">Invalid input uri</string>
+    <string name="error_applying_blur">Error applying blur</string>
+    <string name="writing_to_mediaStore_failed">Writing to MediaStore failed</string>
+    <string name="error_saving_image">Error saving image</string>
+    <string name="error_cleaning_file">Error cleaning up old temporary files</string>
 </resources>

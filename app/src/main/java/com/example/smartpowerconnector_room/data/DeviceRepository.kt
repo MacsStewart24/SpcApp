@@ -9,6 +9,8 @@ interface DeviceRepository {
     //Retrieve a single device from the given source
     fun getDeviceStream(id: Int): Flow<Device?>
 
+    suspend fun getDevice(id: String): Flow<Device?>
+
     suspend fun insertDevice(device: Device)            // Add Item
 
     suspend fun deleteDevice(device: Device)            // Delete Item
