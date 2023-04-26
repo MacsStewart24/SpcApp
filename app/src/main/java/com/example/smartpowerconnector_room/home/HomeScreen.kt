@@ -1,4 +1,4 @@
-package com.example.smartpowerconnector_room.ui.navigation.home
+package com.example.smartpowerconnector_room.home
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.inventory.R
 import com.example.smartpowerconnector_room.SPCAppTopAppBar
@@ -37,6 +38,7 @@ object HomeScreen : NavigationDestination {
 fun HomeScreen(
     navigateToDeviceEntry:() -> Unit,
     navigateToDeviceUpdate: (Int)-> Unit,
+    navigateToUsageScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
   ){
@@ -60,6 +62,7 @@ fun HomeScreen(
     ){ innerPadding ->
         localHomeBody(
             deviceList = homeUiState.deviceList,
+            onUsageDetails= navigateToUsageScreen,
             onDeviceClick = navigateToDeviceUpdate,
             modifier = modifier.padding(innerPadding)
         )
@@ -70,6 +73,7 @@ fun HomeScreen(
 private fun localHomeBody(
     deviceList: List<Device>,
     onDeviceClick: (Int) -> Unit,
+    onUsageDetails: () -> Unit,
     modifier: Modifier=Modifier,
     viewModel2: NetworkHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
@@ -79,6 +83,12 @@ private fun localHomeBody(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
+        Button(
+            onClick =  onUsageDetails,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("View Usage Details")
+        }
         InventoryListHeader()
         Divider()
         if(deviceList.isEmpty()){
@@ -89,29 +99,18 @@ private fun localHomeBody(
         } else{
             LocalInventoryList(deviceList= deviceList, onDeviceClick= { onDeviceClick(it.id) })
         }
-        Divider( )
+        Divider()
         Text(
             stringResource(R.string.network_message),
             fontSize = 24.sp,
             modifier = Modifier
         )
         Divider()
-        NetworkHomeBody(awsUiState = viewModel2.awsUiState, retryAction = viewModel2::getAllDevices)
+        NetworkHomeBody(awsUiState = viewModel2.awsUiState, retryAction = viewModel2::getAllDevices, refresh = viewModel2::getAllDevices)
+
     }
 }
 
-@Composable
-fun NetworkHomeBody(
-    awsUiState: AwsUiState,
-    retryAction: () -> Unit,
-    modifier: Modifier = Modifier
-){
-    when(awsUiState) {
-        is AwsUiState.Loading -> LoadingScreen(modifier)
-        is AwsUiState.Success -> NetworkInventoryList(awsUiState.iDeviceList,  modifier)
-        is AwsUiState.Error -> ErrorScreen(retryAction, modifier)
-    }
-}
 
 @Composable
 private fun LocalInventoryList(
@@ -122,19 +121,6 @@ private fun LocalInventoryList(
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)){
         items(items =deviceList, key = {it.id}){device->
             InventoryDevice(device = device, onDeviceClick = onDeviceClick)
-            Divider()
-        }
-    }
-}
-
-@Composable
-fun NetworkInventoryList(
-    iDeviceList: List<DeviceData>,
-    modifier: Modifier = Modifier
-){
-    LazyColumn(modifier = Modifier, verticalArrangement = Arrangement.spacedBy(8.dp)){
-        items( items = iDeviceList, key = {it.deviceName}){iDevice ->
-            NetworkDevice(iDevice = iDevice)
             Divider()
         }
     }
@@ -171,6 +157,11 @@ fun NetworkDevice(
             modifier = Modifier.weight(1.0f),
             fontWeight = FontWeight.Bold
         )
+//        Text(
+//                text = iDevice.deviceTime.toString(),
+//        modifier = Modifier.weight(1.0f),
+//        fontWeight = FontWeight.Bold
+//        )
     }
 }
 

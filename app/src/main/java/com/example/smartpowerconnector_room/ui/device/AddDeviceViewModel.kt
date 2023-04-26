@@ -33,6 +33,7 @@ data class DeviceDetails(
     val deviceId: String= " ",
     val deviceStatus: String = "Off",
     val deviceDescription: String= " ",
+    val deviceTime: Int = 0
 )
 
 data class DeviceUiState(
@@ -45,7 +46,7 @@ fun DeviceDetails.toDevice(): Device = Device(
     deviceName= deviceName,
     deviceId = deviceId,
     deviceStatus= deviceStatus,
-    deviceDescription = deviceDescription
+    deviceDescription = deviceDescription,
 )
 
 fun Device.toDeviceUiState(validEntry: Boolean= false): DeviceUiState = DeviceUiState(
@@ -58,5 +59,5 @@ fun Device.toDeviceDetails(): DeviceDetails = DeviceDetails(
     deviceName= deviceName,
     deviceId = deviceId,
     deviceStatus= deviceStatus,
-    deviceDescription = deviceDescription
+    deviceDescription = deviceDescription,
 )

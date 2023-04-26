@@ -1,4 +1,4 @@
-package com.example.smartpowerconnector_room.ui.navigation.home
+package com.example.smartpowerconnector_room.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

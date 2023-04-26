@@ -115,5 +115,13 @@ fun DeviceInputForm(
             enabled = enabled,
             singleLine = true
         )
+        OutlinedTextField(
+            value = deviceDetails.deviceTime.toString(),
+            onValueChange = { onValueChange(deviceDetails.copy(deviceTime = deviceDetails.deviceTime)) },
+            label = { Text(stringResource(R.string.device_time)) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
     }
 }
