@@ -6,7 +6,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.smartpowerconnector_room.DeviceApplication
-import com.example.smartpowerconnector_room.alarm.AlarmInterface
 import com.example.smartpowerconnector_room.internet.idata.NetworkHomeViewModel
 import com.example.smartpowerconnector_room.ui.device.AddDeviceViewModel
 import com.example.smartpowerconnector_room.ui.device.DeviceDetailsViewModel
@@ -21,6 +20,7 @@ import com.example.smartpowerconnector_room.ui.routinescreens.multi.MultiRoutine
 import com.example.smartpowerconnector_room.ui.routinescreens.routine.TimerRoutineDetailsViewModel
 import com.example.smartpowerconnector_room.ui.routinescreens.routine.TimerRoutineEditViewModel
 import com.example.smartpowerconnector_room.ui.routinescreens.routine.TimerRoutineEntryViewModel
+import com.example.smartpowerconnector_room.usage.UsageViewModel
 
 
 object AppViewModelProvider {
@@ -60,6 +60,12 @@ object AppViewModelProvider {
                 DeviceApplication().container.awsRepository
             )
         }
+        initializer {
+            UsageViewModel(
+            DeviceApplication().container.useRepository
+//                    DeviceApplication().container.awsRepository
+            )
+        }
         //////////////////////////Timer Routine/////////////////////////////////
 
         // Initializer for TimerRoutineEntryViewModel
@@ -68,7 +74,7 @@ object AppViewModelProvider {
                 DeviceApplication().container.routinesRepository,
                 DeviceApplication().container.deviceRepository,
                 DeviceApplication().container.awsRepository,
-                DeviceApplication().container.alarmInterface
+                DeviceApplication().container.workRepository
                 )
         }
 
@@ -89,7 +95,8 @@ object AppViewModelProvider {
         initializer {
             ClockRoutineEntryViewModel(
                 DeviceApplication().container.clockRoutineRepository,
-                DeviceApplication().container.deviceRepository
+                DeviceApplication().container.deviceRepository,
+                DeviceApplication().container.workRepository
             )
         }
         initializer {
@@ -111,7 +118,8 @@ object AppViewModelProvider {
         initializer {
             MultiRoutineEntryViewModel(
                 DeviceApplication().container.multiRoutineRepository,
-                DeviceApplication().container.deviceRepository
+                DeviceApplication().container.deviceRepository,
+                DeviceApplication().container.awsRepository
             )
         }
         initializer {
@@ -129,7 +137,11 @@ object AppViewModelProvider {
 
         /////////////////////////Mix Routine//////////////////////////////
         initializer {
-            MixRoutineEntryViewModel(DeviceApplication().container.mixRoutineRepository, DeviceApplication().container.deviceRepository)
+            MixRoutineEntryViewModel(
+                DeviceApplication().container.mixRoutineRepository,
+                DeviceApplication().container.deviceRepository,
+                DeviceApplication().container.workRepository
+            )
         }
         initializer {
             MixRoutineEditViewModel(

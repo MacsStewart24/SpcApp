@@ -44,3 +44,11 @@ class NetworkDeviceRepository(
            return awsApiService.updateDevice(deviceData.deviceName, deviceData)
     }
 }
+
+interface UseRepository{
+    suspend fun getUsages(): List<Usage>
+}
+
+class NetworkUsagesRepository(private val awsApi: AwsApi): UseRepository{
+    override suspend fun getUsages(): List<Usage> = awsApi.getUsages()
+}

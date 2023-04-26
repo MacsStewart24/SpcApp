@@ -20,6 +20,8 @@ interface AwsApiService{
     @GET("items")
     suspend fun getAllDevices(): List<DeviceData>
 
+
+
     @PUT("items/{id}")
     suspend fun onOffSwitch(@Path("id") id: String, @Body deviceData: DeviceData): Response<DeviceData>
 
@@ -31,5 +33,21 @@ interface AwsApiService{
 
     //@PATCH("items/{id}")
     //fun patchDevice(@Path("id") id: String, @ParameterName() deviceData: DeviceData): Response<DeviceData>
+
+
+
+    companion object {
+        val instance by lazy {
+            Retrofit.Builder()
+                .baseUrl("https://aaeh7rnpl1.execute-api.us-east-1.amazonaws.com/")
+                .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+                .build()
+                .create(AwsApiService::class.java)
+        }
+    }
 }
 
+interface AwsApi{
+    @GET("displayfunction")
+    suspend fun getUsages(): List<Usage>
+}

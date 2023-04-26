@@ -13,7 +13,6 @@ data class Device (
     val deviceId: String,// Added _ to name
     val deviceStatus: String,
     val deviceDescription: String,
-    val deviceTime: Int
     //val deviceRoutine: Int,
     //val RoutineStatus: Boolean, ON->OFF Or OFF->ON
 )

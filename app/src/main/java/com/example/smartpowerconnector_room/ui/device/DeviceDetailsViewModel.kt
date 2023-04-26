@@ -106,7 +106,7 @@ fun DeviceDetails.toDeviceData(): DeviceData {
         deviceId= this.deviceId,
         deviceDescription =  this.deviceDescription,
         deviceStatus = this.deviceStatus,
-        deviceTime = this.deviceTime
+//        deviceTime = this.deviceTime
     )
 }
 

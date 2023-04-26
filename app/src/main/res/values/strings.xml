@@ -60,7 +60,10 @@
     <string name="changing_status">Changing the Device status</string>
     <string name="device_time">Time</string>
 
+    <string name="device_changed">%s was changed</string>
+
     <string name="running_routine">Running Routine</string>
+    <string name="usage_title">View Usage</string>
 
     <!-- Titles -->
     <string name="blur_title">Select Blur Amount</string>

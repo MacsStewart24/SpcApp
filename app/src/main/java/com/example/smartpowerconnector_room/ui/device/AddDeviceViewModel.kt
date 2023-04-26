@@ -47,7 +47,6 @@ fun DeviceDetails.toDevice(): Device = Device(
     deviceId = deviceId,
     deviceStatus= deviceStatus,
     deviceDescription = deviceDescription,
-    deviceTime =deviceTime
 )
 
 fun Device.toDeviceUiState(validEntry: Boolean= false): DeviceUiState = DeviceUiState(
@@ -61,5 +60,4 @@ fun Device.toDeviceDetails(): DeviceDetails = DeviceDetails(
     deviceId = deviceId,
     deviceStatus= deviceStatus,
     deviceDescription = deviceDescription,
-    deviceTime = deviceTime
 )

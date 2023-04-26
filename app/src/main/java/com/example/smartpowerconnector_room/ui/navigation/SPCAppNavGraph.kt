@@ -20,6 +20,8 @@ import com.example.smartpowerconnector_room.ui.routinescreens.mixed.MixRoutineEn
 import com.example.smartpowerconnector_room.ui.routinescreens.mixed.MixRoutineEntryScreen
 import com.example.smartpowerconnector_room.ui.routinescreens.multi.*
 import com.example.smartpowerconnector_room.ui.routinescreens.routine.*
+import com.example.smartpowerconnector_room.usage.UsageDetailsDestination
+import com.example.smartpowerconnector_room.usage.UsageScreen
 
 @Composable
 fun SPCNavHost(
@@ -36,11 +38,18 @@ fun SPCNavHost(
                 navigateToDeviceEntry = {navController.navigate(AddDeviceDestination.route)},
                 navigateToDeviceUpdate = {
                     navController.navigate("${DeviceDetailsDestination.route}/${it}")
-                }
+                },
+                navigateToUsageScreen = {navController.navigate(UsageDetailsDestination.route)}
             )
         }
         composable(route = AddDeviceDestination.route){
             AddDeviceScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = UsageDetailsDestination.route) {
+            UsageScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )
@@ -212,8 +221,6 @@ fun SPCNavHost(
             navigateBack = { navController.navigateUp() },
             //onNavigateUp = { navController.navigateUp() },
             navigateToEditMixRoutine = { navController.navigate("${MixRoutineEditDestination.route}/$it") }
-
-
             )
         }
         composable(
@@ -227,7 +234,5 @@ fun SPCNavHost(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
-
-
     }
 }

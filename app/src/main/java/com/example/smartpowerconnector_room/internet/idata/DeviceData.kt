@@ -13,6 +13,15 @@ data class DeviceData(
     @SerialName(value = "id1" ) val deviceId: String,
     @SerialName(value = "id2" ) val deviceStatus: String,
     @SerialName(value = "id3" ) val deviceDescription: String,
-    @SerialName(value = "id4" ) val deviceTime: Int,
+    //@SerialName(value = "id4" ) val deviceTime: Int,
     )
 
+
+@Serializable
+data class Usage(
+    @SerialName(value = "boardID" )  val boardID: String,
+    @SerialName(value = "timestamp" ) val timestamp: String,
+    @SerialName(value = "current" ) val current: Int,
+    @SerialName(value = "status" ) val status: String,
+    @SerialName(value = "voltage" ) val voltage: Int,
+)

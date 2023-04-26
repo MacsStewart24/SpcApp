@@ -38,6 +38,7 @@ object HomeScreen : NavigationDestination {
 fun HomeScreen(
     navigateToDeviceEntry:() -> Unit,
     navigateToDeviceUpdate: (Int)-> Unit,
+    navigateToUsageScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
   ){
@@ -61,6 +62,7 @@ fun HomeScreen(
     ){ innerPadding ->
         localHomeBody(
             deviceList = homeUiState.deviceList,
+            onUsageDetails= navigateToUsageScreen,
             onDeviceClick = navigateToDeviceUpdate,
             modifier = modifier.padding(innerPadding)
         )
@@ -71,6 +73,7 @@ fun HomeScreen(
 private fun localHomeBody(
     deviceList: List<Device>,
     onDeviceClick: (Int) -> Unit,
+    onUsageDetails: () -> Unit,
     modifier: Modifier=Modifier,
     viewModel2: NetworkHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
@@ -80,6 +83,12 @@ private fun localHomeBody(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
+        Button(
+            onClick =  onUsageDetails,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("View Usage Details")
+        }
         InventoryListHeader()
         Divider()
         if(deviceList.isEmpty()){
@@ -98,6 +107,7 @@ private fun localHomeBody(
         )
         Divider()
         NetworkHomeBody(awsUiState = viewModel2.awsUiState, retryAction = viewModel2::getAllDevices, refresh = viewModel2::getAllDevices)
+
     }
 }
 
@@ -147,11 +157,11 @@ fun NetworkDevice(
             modifier = Modifier.weight(1.0f),
             fontWeight = FontWeight.Bold
         )
-        Text(
-                text = iDevice.deviceTime.toString(),
-        modifier = Modifier.weight(1.0f),
-        fontWeight = FontWeight.Bold
-        )
+//        Text(
+//                text = iDevice.deviceTime.toString(),
+//        modifier = Modifier.weight(1.0f),
+//        fontWeight = FontWeight.Bold
+//        )
     }
 }
 
@@ -186,11 +196,6 @@ private fun InventoryDevice(
             text = device.deviceDescription,
             modifier = Modifier.weight(1.0f),
             fontWeight = FontWeight.Bold
-        )
-        Text(
-                text = device.deviceTime.toString(),
-        modifier = Modifier.weight(1.0f),
-        fontWeight = FontWeight.Bold
         )
     }
 }
